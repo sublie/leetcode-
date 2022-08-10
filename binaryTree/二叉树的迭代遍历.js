@@ -45,6 +45,20 @@ var inorderTraversal = function(root, res = []) {
     }
 }
 
+const levelTraversal = function(root) {
+  let result = [], 
+    res = [root], 
+    len = res.length ;
+  while ( len > 0) {
+    for (let i = 0; i < len; i++) {
+      let node = res.shift() ;
+      
+      node.left && res.push(node.left) ;
+      node.rigth && res.push(node.rigth);
+    }
+  }
+}
+
 // 定义二叉树
 var TreeNode = function(val, left, right) {
     this.val = val === undefined? 0 : val;

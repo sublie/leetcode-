@@ -37,7 +37,7 @@ function TreeNode(val, left, right) {
 var buildTree = function (preorder, inorder) {
   if (preorder.length <= 0) return null;
 
-  buildTree(0, preorder.length, 0, inorder.length);
+  return buildTree(0, preorder.length, 0, inorder.length);
 
   function buildTree(preStart, preEnd, inStart, inEnd) {
     // note：递归不变量决定结束条件（这里是左闭右开）
@@ -85,4 +85,4 @@ var buildTree = function (preorder, inorder) {
   }
 };
 
-buildTree([3, 9, 20, 15, 7], [9, 3, 15, 20, 7]);
+module.exports.aroot = buildTree([3, 9, 20, 15, 7], [9, 3, 15, 20, 7]);
