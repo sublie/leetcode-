@@ -85,4 +85,39 @@ var buildTree = function (preorder, inorder) {
   }
 };
 
-module.exports.aroot = buildTree([3, 9, 20, 15, 7], [9, 3, 15, 20, 7]);
+/**
+ * 用构建满二叉树的方法构建即可
+ * @param {array} levelOrder 二叉树的层序遍历数组
+ * @returns {TreeNode} 二叉树根节点
+ */
+var buildTreeByDefault = function (levelOrder) {
+  const nodeList = [] ;
+  levelOrder.forEach((value, i) => { //转化成节点列表
+    value !== null && nodeList.push(new TreeNode(value)) ;
+    value === null && nodeList.push(null) ;
+  })
+  const root = nodeList[0] ;
+  let j = 0 ;
+  nodeList.forEach((value, i) => {
+    if (value === null) {
+      j++ ;
+      return ;
+    }
+    if (nodeList[(i-j)*2+1] !== undefined)
+      value.left = nodeList[(i-j)*2+1] ;
+    else value.left = null ;
+    if (nodeList[(i-j)*2+2] !== undefined)
+      value.right = nodeList[(i-j)*2+2] ;
+    else value.right = null ;
+  })
+  return root ;
+}
+
+
+
+module.exports = {
+  aroot: buildTree([3, 9, 20, 15, 7], [9, 3, 15, 20, 7]),
+  TreeNode,
+  buildTree,
+  buildTreeByDefault,
+}
