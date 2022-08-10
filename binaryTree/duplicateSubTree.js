@@ -36,5 +36,3 @@ var root = require('./buildTree').buildTreeByDefault([1,2,3,4,null,2,4,null,null
   TreeNode = require('./buildTree').TreeNode ;
 let res = findDuplicateSubtrees(root) ;
 console.log(res); 
-  //  [ [ 'null', 'null', '4' ],
-  //    [ 'null', 'null', '4', 'null', '2' ] ]
