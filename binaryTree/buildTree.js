@@ -113,11 +113,57 @@ var buildTreeByDefault = function (levelOrder) {
   return root ;
 }
 
+/**
+ * 构建树的原理类似buildTreeByDefault，但是树的节点新增了size属性 用于记录以该节点为根的树的节点总数
+ * @param {array} levelOrder 二叉树的层序遍历
+ * @returns 生成的二叉树根节点
+ */
+var buildBFT = function (levelOrder) {
+  let sumTreeNodes = 0 ;
+  // 先生成没有节点属性size的二叉树
+  const nodeList = [] ;
+  levelOrder.forEach((value, i) => { //转化成节点列表
+    value !== null && nodeList.push(new TreeNode(value)) ;
+    value === null && nodeList.push(null) ;
+  })
+  const root = nodeList[0] ;
+  let j = 0 ;
+  nodeList.forEach((value, i) => {
+    if (value === null) {
+      j++ ;
+      return ;
+    }
+    if (nodeList[(i-j)*2+1] !== undefined)
+      value.left = nodeList[(i-j)*2+1] ;
+    else value.left = null ;
+    if (nodeList[(i-j)*2+2] !== undefined)
+      value.right = nodeList[(i-j)*2+2] ;
+    else value.right = null ;
+  })
+  // 中序遍历二叉树，初始化每个节点的 size
+  inTraverse(root) ;
+  return root ;
+  function inTraverse (root) {
+    if (root === null) 
+      return ;
 
+    inTraverse(root.left) ;
+    root.size = ++sumTreeNodes ;
+    // console.log(sumTreeNodes, root.val);
+    inTraverse(root.right) ;
+  }
+  function TreeNode (val, left, right, size) {
+    this.val = val === undefined ? 0 : val ;
+    this.left = left === undefined ? null : left ;
+    this.right = right === undefined ? null : right ;
+    this.size = size === undefined ? 0 : size ;
+  }
+} ;
 
 module.exports = {
   aroot: buildTree([3, 9, 20, 15, 7], [9, 3, 15, 20, 7]),
   TreeNode,
   buildTree,
   buildTreeByDefault,
+  buildBFT,
 }
