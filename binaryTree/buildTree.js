@@ -114,11 +114,11 @@ var buildTreeByDefault = function (levelOrder) {
 }
 
 /**
- * 构建树的原理类似buildTreeByDefault，但是树的节点新增了size属性 用于记录以该节点为根的树的节点总数
+ * 构建树的原理类似buildTreeByDefault，我特别维护了size属性 用于记录以该节点为根的树的节点总数
  * @param {array} levelOrder 二叉树的层序遍历
  * @returns 生成的二叉树根节点
  */
-var buildBFT = function (levelOrder) {
+var buildBST = function (levelOrder) {
   let sumTreeNodes = 0 ;
   // 先生成没有节点属性size的二叉树
   const nodeList = [] ;
@@ -165,5 +165,5 @@ module.exports = {
   TreeNode,
   buildTree,
   buildTreeByDefault,
-  buildBFT,
+  buildBST,
 }
