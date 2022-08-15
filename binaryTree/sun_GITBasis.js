@@ -27,4 +27,8 @@ var lowestCommonAncestor = function (root, p, q) {
 let root = [3, 5, 1, 6, 2, 0, 8, null, null, 7, 4],
   p = 5,
   q = 1;
-console.log(lowestCommonAncestor(buildBST(root), p, q));
+// console.log(lowestCommonAncestor(buildBST(root), p, q));
+for (let i = 0; i < root.length; i++) {
+
+}
+console.log(i);
