@@ -32,4 +32,4 @@ var mergeTrees = function(root1, root2) {
 
 let root1 = buildTreeByDefault([1,3,2,5]),
   root2 = buildTreeByDefault([2,1,3,null,4,null,7]) ;
-console.log(mergeTrees(root1, root2) ;);
+console.log(mergeTrees(root1, root2));
