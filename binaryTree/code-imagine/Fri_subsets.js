@@ -27,10 +27,10 @@ var subsetsWithDup = function (nums) {
             // console.log(res);
             // 刚进入这层
             res.push([...onPath]);
-            console.log(onPath);
-            // 遍历可选集合
+            // console.log(onPath);
+            // 遍历可选集合 将 nums[i]分发给下一层
             for (let i = start; i < nums.length; i++) {
-                console.log(nums[i], visited);
+                // console.log(nums[i], visited);
                 //树层上去重 note：去重需要先对集合排序
                 if (visited[nums[i]] === false && nums[i] === nums[i - 1]) 
                     continue;
