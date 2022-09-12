@@ -1,5 +1,48 @@
 
+class UF {
+    constructor(n) {
+        // 一开始互不连通
+        this.count = n;
+        // 父节点指针初始指向自己
+        this.parent = new Array(n).fill(0).map((item, index) => index);
+        // 最初每棵树只有一个节点
+        // 重量应该初始化 1
+        this.weight = new Array(n).fill(1);
+    }
 
+    // 将节点 p 和节点 q 连通
+    union(p, q) {
+        let pRoot = this.findRoot(p);
+        let qRoot = this.findRoot(q);
+        if (pRoot === qRoot)
+            return;
+        this.weight[qRoot] += this.weight[pRoot];
+        // 两个连通分量合并成一个连通分量
+        this.count--;
+        // note：一个节点的根节点赋成另一个节点的根节点
+        this.parent[pRoot] = qRoot;
+    }
+
+    // 找到 node 的根节点
+    findRoot(node) {
+        if (node !== this.parent[node])
+            this.parent[node] = this.findRoot(this.parent[node]);
+        return this.parent[node];
+    }
+
+    // 判断节点 p 和节点 q 是否连通
+    connected(p, q) {
+        let pRoot = this.findRoot(p);
+        let qRoot = this.findRoot(q);
+        return pRoot === qRoot;
+    }
+
+    // 返回图中的连通分量个数
+    count() {
+        return this.count;
+    }
+}
+module.exports = { UF };
 // 示例 1:
 
 // 输入: n = 5 和 edges = [[0, 1], [1, 2], [3, 4]]
@@ -12,49 +55,6 @@
 
 
 var solve = function (board) {
-    class UF {
-        constructor(n) {
-            // 一开始互不连通
-            this.count = n;
-            // 父节点指针初始指向自己
-            this.parent = new Array(n).fill(0).map((item, index) => index);
-            // 最初每棵树只有一个节点
-            // 重量应该初始化 1
-            this.weight = new Array(n).fill(1);
-        }
-
-        // 将节点 p 和节点 q 连通
-        union(p, q) {
-            let pRoot = this.findRoot(p);
-            let qRoot = this.findRoot(q);
-            if (pRoot === qRoot)
-                return;
-            this.weight[qRoot] += this.weight[pRoot];
-            // 两个连通分量合并成一个连通分量
-            this.count--;
-            // note：一个节点的根节点赋成另一个节点的根节点
-            this.parent[pRoot] = qRoot;
-        }
-
-        // 找到 node 的根节点
-        findRoot(node) {
-            if (node !== this.parent[node])
-                this.parent[node] = this.findRoot(this.parent[node]);
-            return this.parent[node];
-        }
-
-        // 判断节点 p 和节点 q 是否连通
-        connected(p, q) {
-            let pRoot = this.findRoot(p);
-            let qRoot = this.findRoot(q);
-            return pRoot === qRoot;
-        }
-
-        // 返回图中的连通分量个数
-        count() {
-            return this.count;
-        }
-    }
     if (board.length <= 0) 
         return ;
     let m = board.length ;
@@ -103,50 +103,6 @@ var solve = function (board) {
 }
 
 var equationsPossible = function (equations) {
-    class UF {
-        constructor(n) {
-            // 一开始互不连通
-            this.count = n;
-            // 父节点指针初始指向自己
-            this.parent = new Array(n).fill(0).map((item, index) => index);
-            // 最初每棵树只有一个节点
-            // 重量应该初始化 1
-            this.weight = new Array(n).fill(1);
-        }
-
-        // 将节点 p 和节点 q 连通
-        union(p, q) {
-            let pRoot = this.findRoot(p);
-            let qRoot = this.findRoot(q);
-            if (pRoot === qRoot)
-                return;
-            this.weight[qRoot] += this.weight[pRoot];
-            // 两个连通分量合并成一个连通分量
-            this.count--;
-            // note：一个节点的根节点赋成另一个节点的根节点
-            this.parent[pRoot] = qRoot;
-        }
-
-        // 找到 node 的根节点
-        findRoot(node) {
-            if (node !== this.parent[node])
-                this.parent[node] = this.findRoot(this.parent[node]);
-            return this.parent[node];
-        }
-
-        // 判断节点 p 和节点 q 是否连通
-        connected(p, q) {
-            let pRoot = this.findRoot(p);
-            let qRoot = this.findRoot(q);
-            return pRoot === qRoot;
-        }
-
-        // 返回图中的连通分量个数
-        count() {
-            return this.count;
-        }
-    }
-
     // 26 个英文字母
     let uf = new UF(26) ;
     let result = true ;
@@ -164,9 +120,7 @@ var equationsPossible = function (equations) {
         if (item[1] === '!') {
             let l = item[0] ;
             let r = item[3] ;
-            console.log(uf.connected(l.charCodeAt() - 97, r.charCodeAt() - 97));
-            // console.log(uf.findRoot(l.charCodeAt() - 97));
-            // console.log(uf.findRoot(r.charCodeAt() - 97));
+            // console.log(uf.connected(l.charCodeAt() - 97, r.charCodeAt() - 97));
             if (uf.connected(l.charCodeAt() - 97, r.charCodeAt() - 97))
                 result = false ;
         }
@@ -176,7 +130,7 @@ var equationsPossible = function (equations) {
 
 let equations = ["a==b", "b!=a"]
 let res = equationsPossible(equations) ;
-console.log(res);
+// console.log(res);
 
 // let board = [["X", "X", "X", "X"], ["X", "O", "O", "X"], ["X", "X", "O", "X"], ["X", "O", "X", "X"]]
 // board = [["O", "O", "O"], ["O", "O", "O"], ["O", "O", "O"]]
