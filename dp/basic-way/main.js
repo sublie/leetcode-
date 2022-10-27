@@ -3,7 +3,7 @@
  * @Author: xieql
  * @Date: 2022-10-26 08:34:40
  * @LastEditors: xieql
- * @LastEditTime: 2022-10-26 22:42:49
+ * @LastEditTime: 2022-10-27 22:18:30
  * 
  */
 /**
@@ -56,27 +56,61 @@ var coinChange = function (coins, amount) {
  * @param {number[]} nums
  * @return {number}
  */
-var lengthOfLIS = function (nums) {
-    // 定义：dp[i] 表示以 nums[i] 这个数结尾的最长递增子序列的长度
-    let dp = new Array(nums.length);
-    // base case：dp 数组全都初始化为 1
-    dp.fill(1);
-    for (let i = 1; i < dp.length; i++) {
-        let num = nums[i];
-        for (let j = 0; j < i; j++) {
-            if (num > nums[j])
-                dp[i] = Math.max(dp[i], dp[j] + 1);
-        }
-    }
+// var lengthOfLIS = function (nums) {
+//     // 定义：dp[i] 表示以 nums[i] 这个数结尾的最长递增子序列的长度
+//     let dp = new Array(nums.length);
+//     // base case：dp 数组全都初始化为 1
+//     dp.fill(1);
+//     for (let i = 1; i < dp.length; i++) {
+//         let num = nums[i];
+//         for (let j = 0; j < i; j++) {
+//             if (num > nums[j])
+//                 dp[i] = Math.max(dp[i], dp[j] + 1);
+//         }
+//     }
 
-    // 取 dp 中的最大值
-    let res = 0;
-    for (let i = 0; i < dp.length; i++) {
-        res = Math.max(res, dp[i]);
+//     // 取 dp 中的最大值
+//     let res = 0;
+//     for (let i = 0; i < dp.length; i++) {
+//         res = Math.max(res, dp[i]);
+//     }
+//     // console.log(res, dp);
+//     return res;
+// };
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var lengthOfLIS = function (nums) {
+    let top = [];
+    // 牌堆初始化为 0
+    let piles = 0;
+    for (let i = 0; i < nums.length; i++) {
+        // 要处理的牌
+        let poker = nums[i];
+        console.log(top, poker);
+        // 二分搜索左边界
+        let left = 0, right = piles;
+        while (left < right) {
+            let mid = left + Math.floor((right - left) / 2);
+            if (poker < top[mid]) {
+                right = mid;
+            } else if (top[mid] < poker) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        // 没找到合适的牌堆，新建一堆
+        if (left === piles) piles++;
+        // 把这张牌放到牌堆顶
+        top[left] = poker;
+        console.log(top);
     }
-    // console.log(res, dp);
-    return res;
-};
+    // 牌堆数就是 LIS 长度
+    return piles;
+}
 
 // let nums = [10, 9, 2, 5, 3, 7, 101, 18]
 // lengthOfLIS(nums)
@@ -96,12 +130,12 @@ var maxEnvelopes = function (envelopes) {
     for (let i = 0; i < envelopes.length; i++) {
         heights[i] = envelopes[i][1];
     }
-    console.log(lengthOfLIS(heights), heights);
+    // console.log(lengthOfLIS(heights), heights);
     return lengthOfLIS(heights);
 };
 
 let envelopes = [[5, 4], [6, 4], [6, 7], [2, 3]]
-envelopes = [[30, 50], [12, 2], [3, 4], [12, 15]]
+// envelopes = [[30, 50], [12, 2], [3, 4], [12, 15]]
 maxEnvelopes(envelopes);
 // 输出：3
 // 解释：最多信封的个数为 3, 组合为: [2, 3] => [5, 4] => [6, 7]。
