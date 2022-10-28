@@ -3,7 +3,7 @@
  * @Author: xieql
  * @Date: 2022-10-26 08:34:40
  * @LastEditors: xieql
- * @LastEditTime: 2022-10-27 22:18:30
+ * @LastEditTime: 2022-10-27 22:50:14
  * 
  */
 /**
@@ -52,7 +52,7 @@ var coinChange = function (coins, amount) {
 // let res = coinChange(coins, amount);
 // console.log(res);
 
-/**
+/** 动态规划 O(N ^ 2) 解决力扣第 354 题「 俄罗斯套娃信封问题」
  * @param {number[]} nums
  * @return {number}
  */
@@ -78,7 +78,7 @@ var coinChange = function (coins, amount) {
 //     return res;
 // };
 
-/**
+/** 二分法 O(N * log(N))) 解决力扣第 354 题「 俄罗斯套娃信封问题」
  * @param {number[]} nums
  * @return {number}
  */
