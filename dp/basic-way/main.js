@@ -3,7 +3,7 @@
  * @Author: xieql
  * @Date: 2022-10-26 08:34:40
  * @LastEditors: xieql
- * @LastEditTime: 2022-10-27 22:50:14
+ * @LastEditTime: 2022-10-29 12:13:41
  * 
  */
 /**
@@ -90,16 +90,18 @@ var lengthOfLIS = function (nums) {
         // 要处理的牌
         let poker = nums[i];
         console.log(top, poker);
-        // 二分搜索左边界
+        // 二分搜索 大于等于 poker 中最小的数
         let left = 0, right = piles;
         while (left < right) {
+            // note：mid必须向下取整才能令 取到比poker大的数
             let mid = left + Math.floor((right - left) / 2);
             if (poker < top[mid]) {
                 right = mid;
             } else if (top[mid] < poker) {
                 left = mid + 1;
-            } else {
-                right = mid;
+            } else if (top[mid] === poker) {
+                left = mid;
+                break;
             }
         }
         // 没找到合适的牌堆，新建一堆
@@ -130,12 +132,12 @@ var maxEnvelopes = function (envelopes) {
     for (let i = 0; i < envelopes.length; i++) {
         heights[i] = envelopes[i][1];
     }
-    // console.log(lengthOfLIS(heights), heights);
     return lengthOfLIS(heights);
 };
 
 let envelopes = [[5, 4], [6, 4], [6, 7], [2, 3]]
 // envelopes = [[30, 50], [12, 2], [3, 4], [12, 15]]
-maxEnvelopes(envelopes);
+let res = maxEnvelopes(envelopes);
+console.log(res);
 // 输出：3
 // 解释：最多信封的个数为 3, 组合为: [2, 3] => [5, 4] => [6, 7]。
