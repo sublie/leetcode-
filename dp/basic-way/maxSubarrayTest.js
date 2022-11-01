@@ -3,54 +3,67 @@
  * @Author: xieql
  * @Date: 2022-10-29 12:19:21
  * @LastEditors: xieql
- * @LastEditTime: 2022-10-29 22:36:07
+ * @LastEditTime: 2022-11-01 13:17:58
  * 
  */
-/** O(N ^ 2)
+/** 53.最大子数组和
  * @param {number[]} nums
  * @return {number}
  */
+// 状态转移方程：dp[i] = dp[i-1] + nums[i] or nums[i-1] while dp[i-1] < 0
+// 与下面的动态规划方法思路一致 重点是处理状态转移时的手法不同
 var maxSubArray = function (nums) {
-    // 定义一个数组储 res，res[i]表示 [0,i] 区间连续子数组的最大和与他的左边界
-    let res = new Array(nums.length);
-    for (let i = 0; i < nums.length; i++) {
-        res[i] = new Array(2).fill(0);
-    }
-    // 思路(错误)：滑动窗口
-    // 1. 用一个 for 循环从左到右遍历 nums
-    // 2. 对于 [left, right] 先right++直到right==i，再left++right直到left==i 这样就枚举了所有的连续子数组
-    //    在不断的调整窗口期间记录 max
-    // 难点：记录 max 的 left 即左边界(作用：作为下一个区间[left,i+1]的左边界)
-    // 解决：更新 max 时 立即更新 left
-    // 难点：穷举所有以[[正数]]开头的子数组，计算他们的元素和，找到元素和最大的那个子数组
-    // 。
-
-};
-
-// 53. 最大子数组和
-maxSubArray = function (nums) {
     let len = nums.length;
-    // defined a prefix-sum-aray
-    let preSum = new Array(len + 1);
-    preSum[0] = 0;
-    for (let i = 1; i < preSum.length; i++) {
-        preSum[i] = preSum[i - 1] + nums[i - 1];
-    }
-    // console.log(preSum);
-    let minVal = Number.MAX_SAFE_INTEGER;
-    let res = Number.MIN_SAFE_INTEGER;
-    for (let j = 0; j < len; j++) {
-        // 维护 minVal 是 preSum[0..i] 的最小值
-        minVal = Math.min(minVal, preSum[j]);
-        // 以 nums[i] 结尾的最大子数组和就是 preSum[i+1] - min(preSum[0..i])
-        res = Math.max(res, preSum[j + 1] - minVal);
+    let dp = nums[0];
+    let res = dp;
+    for (let i = 1; i < len; i++) {
+        dp = Math.max(dp, 0); //ingenious：dp[i-1] < 0 时令 dp=0
+        dp += nums[i];
+        res = Math.max(res, dp);
     }
     return res;
-}
+};
 
-// let nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]
-// let res = maxSubArray(nums);
-// console.log(res);
+// 动态规划法：利用数学归纳法，先假设有 dp[i]，怎么得到 dp[i+1]?
+// 状态转移方程：dp[i] = max(nums[i] + dp[i-1], nums[i])
+// maxSubArray = function (nums) {
+//     let len = nums.length;
+//     let dp = new Array(len);
+//     // base case
+//     dp[0] = nums[0];
+//     let res = dp[0];
+//     for (let i = 1; i < len; i++) {
+//         // 状态转移方程
+//         dp[i] = Math.max(nums[i], dp[i - 1] + nums[i]);
+//         res = Math.max(res, dp[i]);
+//     }
+//     return res;
+// }
+
+// 前缀和法：以nums[i]结尾的前缀和减去[0,i]区间中前缀和最小值得到 dp[i]即以nums[i]结尾的最大子数组
+// maxSubArray = function (nums) {
+//     let len = nums.length;
+//     // defined a prefix-sum-aray
+//     let preSum = new Array(len + 1);
+//     preSum[0] = 0;
+//     for (let i = 1; i < preSum.length; i++) {
+//         preSum[i] = preSum[i - 1] + nums[i - 1];
+//     }
+//     // console.log(preSum);
+//     let minVal = Number.MAX_SAFE_INTEGER;
+//     let res = Number.MIN_SAFE_INTEGER;
+//     for (let j = 0; j < len; j++) {
+//         // 维护 minVal 是 preSum[0..i] 的最小值
+//         minVal = Math.min(minVal, preSum[j]);
+//         // 以 nums[i] 结尾的最大子数组和就是 preSum[i+1] - min(preSum[0..i])
+//         res = Math.max(res, preSum[j + 1] - minVal);
+//     }
+//     return res;
+// }
+
+let nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+let res = maxSubArray(nums);
+console.log(res); // 6
 
 /** 剑指 Offer II 091. 粉刷房子
  * @param {number[][]} costs
@@ -76,13 +89,9 @@ var minCost = function (costs) {
         // console.log(dp[j]);
     }
     let res = Number.MAX_SAFE_INTEGER;
-    for (let i = 0; i < 3; i++) {
-        // console.log(dp[costs.length - 1][i]);
-        res = Math.min(res, dp[costs.length - 1][i]);
-    }
     return res;
 };
 
-let costs = [[17, 2, 17], [16, 16, 5], [14, 3, 19]]
-let res = minCost(costs)
-console.log(res);
+// let costs = [[17, 2, 17], [16, 16, 5], [14, 3, 19]]
+// let res = minCost(costs)
+// console.log(res);
