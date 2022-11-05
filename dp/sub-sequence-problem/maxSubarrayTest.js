@@ -1,9 +1,9 @@
 /*
- * @Description: 动态规划：最大子数组
+ * @Description: 最大子数组
  * @Author: xieql
  * @Date: 2022-10-29 12:19:21
  * @LastEditors: xieql
- * @LastEditTime: 2022-11-01 13:17:58
+ * @LastEditTime: 2022-11-05 19:26:51
  * 
  */
 /** 53.最大子数组和
@@ -24,7 +24,29 @@ var maxSubArray = function (nums) {
     return res;
 };
 
-// 动态规划法：利用数学归纳法，先假设有 dp[i]，怎么得到 dp[i+1]?
+// 滑动窗口算法专业处理子串/子数组问题
+// 难点：穷举所有以正数开头的子数组
+maxSubArray = function (nums) {
+    let len = nums.length;
+    let l = 0, r = 0;
+    let winSum = 0;
+    let res = Number.MIN_SAFE_INTEGER;
+    while (r < len) {
+        if (winSum < 0) {
+            // 子数组之和小于 0 时缩小窗口
+            winSum -= nums[l];
+            l++;
+            continue;
+        }
+        // 子数组之和大于 0 时扩大窗口
+        winSum += nums[r];
+        res = Math.max(res, winSum);
+        r++;
+    }
+    return res;
+}
+
+// 动态规划算法：利用数学归纳法，先假设有 dp[i]，怎么得到 dp[i+1]?
 // 状态转移方程：dp[i] = max(nums[i] + dp[i-1], nums[i])
 // maxSubArray = function (nums) {
 //     let len = nums.length;
@@ -40,7 +62,7 @@ var maxSubArray = function (nums) {
 //     return res;
 // }
 
-// 前缀和法：以nums[i]结尾的前缀和减去[0,i]区间中前缀和最小值得到 dp[i]即以nums[i]结尾的最大子数组
+// 前缀和算法：以nums[i]结尾的前缀和减去[0,i]区间中前缀和最小值得到 dp[i]即以nums[i]结尾的最大子数组
 // maxSubArray = function (nums) {
 //     let len = nums.length;
 //     // defined a prefix-sum-aray
