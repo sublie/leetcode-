@@ -3,7 +3,7 @@
  * @Author: xieql
  * @Date: 2022-11-06 18:23:22
  * @LastEditors: xieql
- * @LastEditTime: 2022-11-07 20:53:11
+ * @LastEditTime: 2022-11-14 12:34:44
  * 
  */
 
@@ -186,7 +186,160 @@ var ambiguousCoordinates = function (s) {
     }
 };
 
-let s = "(123)"
-s = "(0123)"
-let res = ambiguousCoordinates(s);
+// let s = "(123)"
+// s = "(0123)"
+// let res = ambiguousCoordinates(s);
+// console.log(res);
+
+
+
+// =============================== two days ==================================
+/**
+ * @param {number} n
+ * @param {number[][]} mines
+ * @return {number}
+ */
+var orderOfLargestPlusSign = function (n, mines) {
+    // 显而易见的特殊情况预先处理一下
+    if (n === 1)
+        if (mines.length > 0) return 0;
+        else return 1;
+
+    // 生成一个储存元素为 0 的坐标的表
+    // 这里使用 集合Map 是不是时空效率更高一点？
+    let map = new Array(n).fill(void 0).map(() => new Array(n).fill(1));
+    mines.forEach((it, i) => {
+        let row = it[0], col = it[1];
+        map[row][col] = 0;
+    });
+    console.log(map);
+
+    let res = 0;
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+            if (map[i][j] === 0) continue;
+            // 计算十字架是几阶的 
+            // 不断递增阶数 同时更新结果的最大值
+            let level = 0;
+            while (++level) {
+                console.log(level);
+                res = Math.max(res, level);
+                if (i < level || j < level || j > n - 1 - level || i > n - 1 - level) break;
+                if (map[i][j - level] === 0 || map[i - level][j] === 0 ||
+                    map[i][j + level] === 0 || map[i + level][j] === 0)
+                    break;
+            }
+        }
+    }
+    return res;
+};
+
+// let n =
+//     5,
+//     mines =
+//         [[4, 2]]
+// n =
+//     2
+// mines =
+//     [[0, 0], [0, 1], [1, 0]]
+// let res = orderOfLargestPlusSign(n, mines);
+// console.log(res);
+
+
+
+// =============================== three days ==================================
+/** 864. Shortest Path to Get All Keys
+ * @param {string[]} grid
+ * @return {number}
+ */
+// 题解：BFS + 位运算。
+// 看到最短路径很容易想到用 BFS。
+var shortestPathAllKeys = function (grid) {
+    let dx = [0, 0, -1, 1],
+        dy = [-1, 1, 0, 0];
+    class State {
+        constructor(x, y, key) {
+            this.x = x === undefined ? null : x;
+            this.y = y === undefined ? null : y;
+            this.key = key === undefined ? 0 : key;
+            return this;
+        }
+    }
+    // 查找起点
+    let start = null;
+    let keycnt = 0,
+        allkey = 0;
+    let n = grid.length, m = grid[0].length;
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < m; j++) {
+            if (grid[i][j] === '@') {
+                start = new State(i, j, 0);
+                continue;
+            }
+            if ('a'.charCodeAt() <= grid[i][j].charCodeAt() && grid[i][j].charCodeAt() <= 'z'.charCodeAt()) {
+                console.log(grid[i][j]);
+                allkey |= (1 << grid[i][j].charCodeAt() - 'a'.charCodeAt());
+                keycnt++;
+            }
+        }
+    }
+    console.log(`allkey = ${allkey}, keycnt = ${keycnt}`);
+
+    let res = 0;
+    res = bs(grid, start, allkey);
+    return res;
+    function bs(grid, start, allkey) {
+        let steps = 0;
+        let queue = [];
+        queue.push(start);
+        // let allkey = (1 << keycnt) - 1; // 0b11 表示表示有两把钥匙 每一个 1 表示一把钥匙
+        // BFS 中的状态由他的 坐标+获得的钥匙 决定。
+        let visited = new Array(n).fill(void 0).map(() => new Array(m).fill(void 0).map(() => new Array('z'.charCodeAt() + 1)));
+        visited[start.x][start.y][start.key] = true;
+        while (queue.length > 0) {
+            // 向周边扩散一步
+            let len = queue.length; //note
+            for (let j = 0; j < len; j++) {
+                let cur = queue.shift();
+                console.log(`遍历节点：( ${cur.x}, ${cur.y}, ${cur.key} )`);
+                // 如果所有钥匙都被找到
+                if (allkey === cur.key) return steps;
+                // 遍历下一个状态
+                for (let i = 0; i < 4; i++) {
+                    // if (i === 0 && j === 2) debugger;
+                    let x = cur.x + dx[i], y = cur.y + dy[i];
+                    if (x < 0 || y < 0 || x >= n || y >= m) continue;
+                    let c = grid[x][y];
+                    let key = cur.key;
+                    if (c === '#') continue;
+                    if (isupper(c) && (key >> (c.charCodeAt() - 'A'.charCodeAt()) & 1) === 0) continue;
+                    if (islower(c)) {
+                        key |= 1 << (c.charCodeAt() - 'a'.charCodeAt());
+                    }
+                    if (visited[x][y][key] === true) continue;
+
+                    visited[x][y][key] = true;
+                    queue.push(new State(x, y, key));
+                }
+            }
+            steps++;
+        }
+        return -1;
+    }
+    function isupper(str) {
+        let res = 0;
+        if (str.charCodeAt() >= 'A'.charCodeAt() && str.charCodeAt() <= 'Z'.charCodeAt())
+            res ^= 1;
+        return res;
+    }
+    function islower(str) {
+        let res = 0;
+        if (str.charCodeAt() >= 'a'.charCodeAt() && str.charCodeAt() <= 'z'.charCodeAt())
+            res ^= 1;
+        return res;
+    }
+};
+
+let grid = ["@.a..", "###.#", "b.A.B"]
+let res = shortestPathAllKeys(grid);
 console.log(res);
